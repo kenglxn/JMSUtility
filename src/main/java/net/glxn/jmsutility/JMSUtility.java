@@ -51,7 +51,7 @@ public class JMSUtility extends Component {
             public void actionPerformed(ActionEvent e) {
                 try {
                     validateInputFields();
-//                    sendMessage();
+                    sendMessage();
                 } catch (Exception ex) {
                     showErrorPane(ex.getMessage(), ExceptionUtils.getFullStackTrace(ex));
                 }
