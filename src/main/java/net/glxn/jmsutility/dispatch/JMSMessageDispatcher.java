@@ -78,8 +78,10 @@ public class JMSMessageDispatcher {
             TextMessage message = session.createTextMessage();
             message.setText(payload);
 
-            for (Entry<String, Object> elem : messageProperties.entrySet()) {
-                message.setObjectProperty(elem.getKey(), elem.getValue());
+            if(messageProperties != null && !messageProperties.isEmpty()) {
+                for (Entry<String, Object> elem : messageProperties.entrySet()) {
+                    message.setObjectProperty(elem.getKey(), elem.getValue());
+                }
             }
 
             producer.send(message);
