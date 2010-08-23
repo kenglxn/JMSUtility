@@ -1,5 +1,7 @@
 package net.glxn.jmsutility;
 
+import net.glxn.jmsutility.dispatch.JMSMessageDispatcher;
+import net.glxn.jmsutility.dispatch.JMSMessageDispatcherFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -20,6 +22,7 @@ public class JMSUtility extends Component {
     private int parameters;
     private String[] parameterValues;
     private Integer numberOfMessagesToSend;
+    private JMSMessageDispatcher jmsMessageDispatcher;
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -51,6 +54,7 @@ public class JMSUtility extends Component {
             public void actionPerformed(ActionEvent e) {
                 try {
                     validateInputFields();
+                    allocateJMSMessageDispatcher();
                     sendMessage();
                 } catch (Exception ex) {
                     showErrorPane(ex.getMessage(), ExceptionUtils.getFullStackTrace(ex));
@@ -59,8 +63,12 @@ public class JMSUtility extends Component {
         });
     }
 
+    private void allocateJMSMessageDispatcher() {
+        jmsMessageDispatcher = JMSMessageDispatcherFactory.getJMSMessageDispatcher(jmsServerUrl.getText());
+    }
+
     protected void validateInputFields() {
-        if (!jmsServerUrl.getText().matches("\\w{2,5}://\\w*:\\d{2,6}")) {
+        if (!jmsServerUrl.getText().matches("\\w{2,5}://\\[a-zA-Z0-9]*:\\d{2,6}")) {
             showErrorPane("input validation error", "JMS Server URL is not a valid URL. " +
                     "\n\n should be: [protocol]://[host]:[port]" +
                     "\n example:   tcp://localhost:61616");
@@ -116,6 +124,7 @@ public class JMSUtility extends Component {
             logWindow.log("Sending " + numberOfMessagesToSend + " message(s)");
 
             //TODO, send numberOfMessagesToSend number of messages using only the message field
+
 
         }
     }
