@@ -34,7 +34,7 @@ public class JMSMessageDispatcher {
         JMS_SERVER_URL = jms_server_url;
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
-                System.out.println("tearing down JMSMessageDispatcher");
+                System.out.println("tearing down JMSMessageDispatcher for URL:"+JMS_SERVER_URL);
                 closeConnection();
             }
         }));
