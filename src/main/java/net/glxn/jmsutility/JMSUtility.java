@@ -2,6 +2,8 @@ package net.glxn.jmsutility;
 
 import net.glxn.jmsutility.dispatch.JMSMessageDispatcher;
 import net.glxn.jmsutility.dispatch.JMSMessageDispatcherFactory;
+import net.glxn.jmsutility.log.LogAppenderFactory;
+import net.glxn.jmsutility.log.LogWindow;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -21,7 +23,7 @@ public class JMSUtility extends Component {
     private int parameters;
     private String[] parameterValues;
     private JMSMessageDispatcher jmsMessageDispatcher;
-    private LogWindow logWindow;
+    private LogWindow logWindow = LogAppenderFactory.getLogWindow();
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -109,9 +111,11 @@ public class JMSUtility extends Component {
     }
 
     private void assembleAndDispatchMessages() {
-        if(logWindow == null) {
-            logWindow = new LogWindow(panel1.getX() + panel1.getWidth() + 25, panel1.getY());
-        }
+        String destinationQueue = queueDestinationTextField.getText();
+        String messagePayload = messageTextPane.getText();
+
+
+
         if (parameterValues.length > 0) {
             logWindow.log("Sending messages for parameters in list. \nTotal number of messages to send=" + parameterValues.length);
 
@@ -119,8 +123,7 @@ public class JMSUtility extends Component {
 
         } else {
             logWindow.log("Sending 1 message");
-
-            //TODO, simply send the message
+            jmsMessageDispatcher.sendMessage(destinationQueue,messagePayload, null);
 
         }
     }
@@ -154,6 +157,7 @@ public class JMSUtility extends Component {
     }
 
     protected void showErrorPane(String title, String msg) {
+        logWindow.log(msg);
         JOptionPane pane = new JOptionPane(msg, JOptionPane.ERROR_MESSAGE);
         JDialog dialog = pane.createDialog("Application says: " + title);
         dialog.setAlwaysOnTop(true);

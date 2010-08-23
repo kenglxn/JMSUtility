@@ -13,6 +13,8 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 
+import net.glxn.jmsutility.log.LogAppender;
+import net.glxn.jmsutility.log.LogWindow;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -24,17 +26,20 @@ public class JMSMessageDispatcher {
     private final String JMS_SERVER_URL;
 
     private Connection connection;
+    private LogAppender logAppender;
 
     /**
      * Constructs a new dispatcher with the given jms_server_url
      *
      * @param jms_server_url the url of the JMS server to send messages e.g. tcp://localhost:61616
+     * @param logWindow
      */
-    protected JMSMessageDispatcher(String jms_server_url) {
+    protected JMSMessageDispatcher(String jms_server_url, LogWindow logWindow) {
+        logAppender = logWindow;
         JMS_SERVER_URL = jms_server_url;
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
-                System.out.println("tearing down JMSMessageDispatcher for URL:"+JMS_SERVER_URL);
+                logAppender.log("tearing down JMSMessageDispatcher for URL:"+JMS_SERVER_URL);
                 closeConnection();
             }
         }));
@@ -53,7 +58,7 @@ public class JMSMessageDispatcher {
      * {@link javax.jms.TextMessage#setObjectProperty(String, Object)}. Value is optional
      * @throws IllegalArgumentException if required argument is missing
      */
-    public void sendMelding(final String queue, final String payload, final Map<String, Object> messageProperties) throws IllegalArgumentException {
+    public void sendMessage(final String queue, final String payload, final Map<String, Object> messageProperties) throws IllegalArgumentException {
         if(queue == null) {
             throw new IllegalArgumentException("queue can not be null");
         }
@@ -95,11 +100,11 @@ public class JMSMessageDispatcher {
             return;
         }
         try {
-            System.out.println("Closing JMS Connection");
+            logAppender.log("Closing JMS Connection");
             connection.close();
-            System.out.println("JMS Connection closed");
+            logAppender.log("JMS Connection closed");
         } catch (JMSException e) {
-            System.err.println("Failed to close JMS Connection");
+            logAppender.log("Failed to close JMS Connection");
             e.printStackTrace();
         }
         connection = null;
@@ -111,7 +116,7 @@ public class JMSMessageDispatcher {
             try {
                 session.close();
             } catch (JMSException e) {
-                System.err.println("Failed to close JMS Session");
+                logAppender.log("Failed to close JMS Session");
                 e.printStackTrace();
                 closeConnection();
             }
@@ -123,7 +128,7 @@ public class JMSMessageDispatcher {
             try {
                 session.rollback();
             } catch (JMSException e) {
-                System.err.println("Failed to rollback JMS Session");
+                logAppender.log("Failed to rollback JMS Session");
                 e.printStackTrace();
                 closeConnection();
             }

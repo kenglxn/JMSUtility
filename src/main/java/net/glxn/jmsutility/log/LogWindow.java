@@ -1,14 +1,15 @@
-package net.glxn.jmsutility;
+package net.glxn.jmsutility.log;
+
+import net.glxn.jmsutility.log.LogAppender;
 
 import javax.swing.*;
 
-class LogWindow extends JFrame {
+public class LogWindow extends JFrame implements LogAppender {
     private JTextArea textArea = new JTextArea();
 
     @SuppressWarnings({"UndesirableClassUsage"})
-    public LogWindow(int x, int y) {
+    LogWindow() {
         super("");
-        setLocation(x, y);
         setSize(500, 300);
         add(new JScrollPane(textArea));
         setAlwaysOnTop(true);
@@ -16,6 +17,7 @@ class LogWindow extends JFrame {
     }
 
     public void log(String msg) {
+        System.out.println(msg);
         textArea.append(msg+"\n");
         this.validate();
     }
