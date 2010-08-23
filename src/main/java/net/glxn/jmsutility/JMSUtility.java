@@ -68,7 +68,7 @@ public class JMSUtility extends Component {
     }
 
     protected void validateInputFields() {
-        if (!jmsServerUrl.getText().matches("\\w{2,5}://\\[a-zA-Z0-9]*:\\d{2,6}")) {
+        if (!jmsServerUrl.getText().matches("\\w{2,5}://.*:\\d{2,6}")) {
             showErrorPane("input validation error", "JMS Server URL is not a valid URL. " +
                     "\n\n should be: [protocol]://[host]:[port]" +
                     "\n example:   tcp://localhost:61616");
