@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Formatter;
 
 public class JMSUtility extends Component {
     private JPanel panel1;
@@ -22,7 +23,7 @@ public class JMSUtility extends Component {
     private JButton helpButton;
     private int parameters;
     private String[] parameterValues;
-    private JMSMessageDispatcher jmsMessageDispatcher;
+    protected JMSMessageDispatcher jmsMessageDispatcher;
     private LogWindow logWindow = LogAppenderFactory.getLogWindow();
 
     public static void main(String[] args) {
@@ -54,9 +55,7 @@ public class JMSUtility extends Component {
         sendMessageSButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    validateInputFields();
-                    allocateJMSMessageDispatcher();
-                    assembleAndDispatchMessages();
+                    sendMessageActionPerformed();
                 } catch (Exception ex) {
                     showErrorPane(ex.getMessage(), ExceptionUtils.getFullStackTrace(ex));
                 }
@@ -64,7 +63,13 @@ public class JMSUtility extends Component {
         });
     }
 
-    private void allocateJMSMessageDispatcher() {
+    protected void sendMessageActionPerformed() {
+        validateInputFields();
+        allocateJMSMessageDispatcher();
+        assembleAndDispatchMessages();
+    }
+
+    protected void allocateJMSMessageDispatcher() {
         jmsMessageDispatcher = JMSMessageDispatcherFactory.getJMSMessageDispatcher(jmsServerUrl.getText());
     }
 
@@ -93,7 +98,7 @@ public class JMSUtility extends Component {
         if (parameters > 1) {
             boolean parameterNumberOfFieldsMismatch = false;
             for (String parameterValue : parameterValues) {
-                int numberOfFieldsInParameterValue = StringUtils.countMatches(parameterValue, "|");
+                int numberOfFieldsInParameterValue = StringUtils.countMatches(parameterValue, ":");
                 if (numberOfFieldsInParameterValue != (parameters - 1)) {
                     parameterNumberOfFieldsMismatch = true;
                 }
@@ -110,21 +115,29 @@ public class JMSUtility extends Component {
         return StringUtils.countMatches(text, "%s");
     }
 
-    private void assembleAndDispatchMessages() {
+    protected void assembleAndDispatchMessages() {
         String destinationQueue = queueDestinationTextField.getText();
-        String messagePayload = messageTextPane.getText();
-
-
+        String parameterizedMessagePayload = messageTextPane.getText();
 
         if (parameterValues.length > 0) {
             logWindow.log("Sending messages for parameters in list. \nTotal number of messages to send=" + parameterValues.length);
 
-            //TODO, iterate list of parameters and create message merging in the value in the message and send message
-
+            for (int i = 0; i < parameterValues.length; i++) {
+                Formatter formatter = new Formatter();
+                String parameterValue = parameterValues[i];
+                String[] values = parameterValue.split(":");
+                String parsedMessagePayload;
+                if(values.length > 0) {
+                    //TODO there is more than one value per line. Meaning messge has more than one placeholder
+                    parsedMessagePayload = formatter.format(parameterizedMessagePayload, values).toString();
+                } else {
+                    parsedMessagePayload = formatter.format(parameterizedMessagePayload, parameterValue).toString();
+                }
+                jmsMessageDispatcher.sendMessage(destinationQueue, parsedMessagePayload, null);
+            }
         } else {
             logWindow.log("Sending 1 message");
-            jmsMessageDispatcher.sendMessage(destinationQueue,messagePayload, null);
-
+            jmsMessageDispatcher.sendMessage(destinationQueue, parameterizedMessagePayload, null);
         }
     }
 
@@ -142,13 +155,13 @@ public class JMSUtility extends Component {
                 "\nparam2" +
                 "\nparam3" +
                 "\n------" +
-                "\nIf you have more than one placeholder, then the values should be separated by a pipe (|) in the parameter list. " +
-                "\nSo message 'hello %s %s' could be given the parameter list 'mr|duke' and the resulting message would be 'hello mr duke'." +
+                "\nIf you have more than one placeholder, then the values should be separated by a colon (:) in the parameter list. " +
+                "\nSo message 'hello %s %s' could be given the parameter list 'mr:duke' and the resulting message would be 'hello mr duke'." +
                 "\n------" +
                 "\nExample parameter list for input with two %s:" +
-                "\nmr|duke" +
-                "\nms|daisy" +
-                "\nmrs|robinson" +
+                "\nmr:duke" +
+                "\nms:daisy" +
+                "\nmrs:robinson" +
                 "\n------";
         JOptionPane pane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE);
         JDialog dialog = pane.createDialog(this, "Help!");

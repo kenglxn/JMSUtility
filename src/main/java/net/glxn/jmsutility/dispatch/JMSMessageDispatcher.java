@@ -14,7 +14,6 @@ import javax.jms.TextMessage;
 
 
 import net.glxn.jmsutility.log.LogAppender;
-import net.glxn.jmsutility.log.LogWindow;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -32,10 +31,10 @@ public class JMSMessageDispatcher {
      * Constructs a new dispatcher with the given jms_server_url
      *
      * @param jms_server_url the url of the JMS server to send messages e.g. tcp://localhost:61616
-     * @param logWindow
+     * @param logAppender the logAppender to use when logging output
      */
-    protected JMSMessageDispatcher(String jms_server_url, LogWindow logWindow) {
-        logAppender = logWindow;
+    protected JMSMessageDispatcher(String jms_server_url, final LogAppender logAppender) {
+        this.logAppender = logAppender;
         JMS_SERVER_URL = jms_server_url;
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
