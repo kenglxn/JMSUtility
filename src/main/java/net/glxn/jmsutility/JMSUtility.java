@@ -23,6 +23,7 @@ public class JMSUtility extends Component {
     private String[] parameterValues;
     private Integer numberOfMessagesToSend;
     private JMSMessageDispatcher jmsMessageDispatcher;
+    private LogWindow logWindow;
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -113,7 +114,9 @@ public class JMSUtility extends Component {
     }
 
     private void sendMessage() {
-        LogWindow logWindow = new LogWindow(panel1.getX() + panel1.getWidth() + 25, panel1.getY());
+        if(logWindow == null) {
+            logWindow = new LogWindow(panel1.getX() + panel1.getWidth() + 25, panel1.getY());
+        }
         if (parameterValues.length > 0) {
             logWindow.log("Sending messages for parameters in list. \nTotal number of messages to send=" + parameterValues.length);
 
