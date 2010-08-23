@@ -41,7 +41,6 @@ public class JMSUtilFormTestCase {
         messages = new ArrayList<String>();
         jmsUtilForm.jmsServerUrl.setText("tcp://localhost:61616");
         jmsUtilForm.queueDestinationTextField.setText("TestQueue");
-        jmsUtilForm.messagesTextField.setText("1");
         jmsUtilForm.messageTextPane.setText("test");
     }
 }

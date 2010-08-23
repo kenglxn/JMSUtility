@@ -14,14 +14,12 @@ public class JMSUtility extends Component {
     private JPanel panel1;
     protected JTextField jmsServerUrl;
     protected JTextField queueDestinationTextField;
-    protected JTextField messagesTextField;
     protected JTextPane messageTextPane;
     protected JTextPane parameterListTextPane;
     private JButton sendMessageSButton;
     private JButton helpButton;
     private int parameters;
     private String[] parameterValues;
-    private Integer numberOfMessagesToSend;
     private JMSMessageDispatcher jmsMessageDispatcher;
     private LogWindow logWindow;
 
@@ -56,7 +54,7 @@ public class JMSUtility extends Component {
                 try {
                     validateInputFields();
                     allocateJMSMessageDispatcher();
-                    sendMessage();
+                    assembleAndDispatchMessages();
                 } catch (Exception ex) {
                     showErrorPane(ex.getMessage(), ExceptionUtils.getFullStackTrace(ex));
                 }
@@ -76,9 +74,6 @@ public class JMSUtility extends Component {
         }
         if (StringUtils.isBlank(queueDestinationTextField.getText())) {
             showErrorPane("input validation error", "You must supply a Queue destination");
-        }
-        if (!StringUtils.isNumeric(messagesTextField.getText())) {
-            showErrorPane("input validation error", "Number of messages must be a number");
         }
         if (StringUtils.isBlank(messageTextPane.getText())) {
             showErrorPane("input validation error", "Message can not be blank");
@@ -113,7 +108,7 @@ public class JMSUtility extends Component {
         return StringUtils.countMatches(text, "%s");
     }
 
-    private void sendMessage() {
+    private void assembleAndDispatchMessages() {
         if(logWindow == null) {
             logWindow = new LogWindow(panel1.getX() + panel1.getWidth() + 25, panel1.getY());
         }
@@ -123,11 +118,9 @@ public class JMSUtility extends Component {
             //TODO, iterate list of parameters and create message merging in the value in the message and send message
 
         } else {
-            numberOfMessagesToSend = Integer.valueOf(messagesTextField.getText());
-            logWindow.log("Sending " + numberOfMessagesToSend + " message(s)");
+            logWindow.log("Sending 1 message");
 
-            //TODO, send numberOfMessagesToSend number of messages using only the message field
-
+            //TODO, simply send the message
 
         }
     }
@@ -153,9 +146,7 @@ public class JMSUtility extends Component {
                 "\nmr|duke" +
                 "\nms|daisy" +
                 "\nmrs|robinson" +
-                "\n------" +
-                "\nIf you have given the number of messages when using parameter list, the number of messages to send will be ignored " +
-                "\nand messages will be sent for entire parameter list";
+                "\n------";
         JOptionPane pane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE);
         JDialog dialog = pane.createDialog(this, "Help!");
         dialog.setAlwaysOnTop(true);
