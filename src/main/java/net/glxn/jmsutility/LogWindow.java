@@ -16,7 +16,7 @@ class LogWindow extends JFrame {
     }
 
     public void log(String msg) {
-        textArea.append(msg);
+        textArea.append(msg+"\n");
         this.validate();
     }
 }
