@@ -5,7 +5,7 @@ import net.glxn.jmsutility.log.LogAppender;
 import javax.swing.*;
 
 public class LogWindow extends JFrame implements LogAppender {
-    private JTextArea textArea = new JTextArea();
+    private final JTextArea textArea = new JTextArea();
 
     @SuppressWarnings({"UndesirableClassUsage"})
     LogWindow() {

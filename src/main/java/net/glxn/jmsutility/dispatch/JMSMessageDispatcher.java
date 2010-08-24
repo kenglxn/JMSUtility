@@ -25,7 +25,7 @@ public class JMSMessageDispatcher {
     private final String JMS_SERVER_URL;
 
     private Connection connection;
-    private LogAppender logAppender;
+    private final LogAppender logAppender;
 
     /**
      * Constructs a new dispatcher with the given jms_server_url

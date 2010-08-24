@@ -21,10 +21,9 @@ public class JMSUtility extends Component {
     protected JTextPane parameterListTextPane;
     private JButton sendMessageSButton;
     private JButton helpButton;
-    private int parameters;
     private String[] parameterValues;
     protected JMSMessageDispatcher jmsMessageDispatcher;
-    private LogWindow logWindow = LogAppenderFactory.getLogWindow();
+    private final LogWindow logWindow = LogAppenderFactory.getLogWindow();
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -85,7 +84,7 @@ public class JMSUtility extends Component {
         if (StringUtils.isBlank(messageTextPane.getText())) {
             showErrorPane("input validation error", "Message can not be blank");
         }
-        parameters = numberOfParametersInText(messageTextPane.getText());
+        int parameters = numberOfParametersInText(messageTextPane.getText());
         parameterValues = StringUtils.split(parameterListTextPane.getText(), "\n");
         if (parameters > 0 && parameterValues.length == 0) {
             showErrorPane("input validation error", "You have supplied a parameterized message but no parameters. " +
@@ -115,19 +114,19 @@ public class JMSUtility extends Component {
         return StringUtils.countMatches(text, "%s");
     }
 
-    protected void assembleAndDispatchMessages() {
+    void assembleAndDispatchMessages() {
         String destinationQueue = queueDestinationTextField.getText();
         String parameterizedMessagePayload = messageTextPane.getText();
 
         if (parameterValues.length > 0) {
             logWindow.log("Sending messages for parameters in list. \nTotal number of messages to send=" + parameterValues.length);
 
-            for (int i = 0; i < parameterValues.length; i++) {
+            for (String parameterValue1 : parameterValues) {
                 Formatter formatter = new Formatter();
-                String parameterValue = parameterValues[i];
+                String parameterValue = parameterValue1;
                 String[] values = parameterValue.split(":");
                 String parsedMessagePayload;
-                if(values.length > 0) {
+                if (values.length > 0) {
                     //TODO there is more than one value per line. Meaning messge has more than one placeholder
                     parsedMessagePayload = formatter.format(parameterizedMessagePayload, values).toString();
                 } else {

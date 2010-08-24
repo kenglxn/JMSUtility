@@ -14,7 +14,7 @@
         </constraints>
         <properties>
           <labelFor value="53d9d"/>
-          <text value="Queue Destination"/>
+          <text value="&amp;Queue Destination"/>
         </properties>
       </component>
       <component id="53d9d" class="javax.swing.JTextField" binding="queueDestinationTextField" default-binding="true">
@@ -33,7 +33,7 @@
         </constraints>
         <properties>
           <labelFor value="f8f71"/>
-          <text value="JMS Server URL"/>
+          <text value="&amp;JMS Server URL"/>
         </properties>
       </component>
       <component id="f8f71" class="javax.swing.JTextField" binding="jmsServerUrl" default-binding="true">
@@ -54,7 +54,7 @@
         </constraints>
         <properties>
           <labelFor value="c864"/>
-          <text value="Message"/>
+          <text value="&amp;Message"/>
         </properties>
       </component>
       <scrollpane id="9a6a6">
@@ -82,7 +82,7 @@
         </constraints>
         <properties>
           <labelFor value="9a5f0"/>
-          <text value="Parameter List"/>
+          <text value="&amp;Parameter List"/>
         </properties>
       </component>
       <scrollpane id="1a33c">
@@ -128,4 +128,8 @@
       </grid>
     </children>
   </grid>
+  <inspectionSuppressions>
+    <suppress inspection="NoLabelFor" id="9a6a6"/>
+    <suppress inspection="NoLabelFor" id="1a33c"/>
+  </inspectionSuppressions>
 </form>
