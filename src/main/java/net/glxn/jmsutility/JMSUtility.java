@@ -4,6 +4,7 @@ import net.glxn.jmsutility.dispatch.JMSMessageDispatcher;
 import net.glxn.jmsutility.dispatch.JMSMessageDispatcherFactory;
 import net.glxn.jmsutility.log.LogAppenderFactory;
 import net.glxn.jmsutility.log.LogWindow;
+import net.glxn.jmsutility.model.InteractiveForm;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
@@ -21,6 +22,7 @@ public class JMSUtility extends Component {
     protected JTextPane parameterListTextPane;
     private JButton sendMessageSButton;
     private JButton helpButton;
+    private InteractiveForm interactiveForm1;
     private String[] parameterValues;
     protected JMSMessageDispatcher jmsMessageDispatcher;
     private final LogWindow logWindow = LogAppenderFactory.getLogWindow();
