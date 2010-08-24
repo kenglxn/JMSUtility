@@ -9,10 +9,10 @@ public class LogWindow extends JFrame implements LogAppender {
 
     @SuppressWarnings({"UndesirableClassUsage"})
     LogWindow() {
-        super("");
+        super("Log Window");
         setSize(500, 300);
+        setLocation(300, 0);
         add(new JScrollPane(textArea));
-        setAlwaysOnTop(true);
         setVisible(true);
     }
 
