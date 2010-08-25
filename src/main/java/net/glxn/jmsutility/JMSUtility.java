@@ -22,7 +22,7 @@ public class JMSUtility extends Component {
     protected JTextPane parameterListTextPane;
     private JButton sendMessageSButton;
     private JButton helpButton;
-    private InteractiveForm interactiveForm1;
+    private InteractiveForm messagePropertiesInteractiveForm;
     private JButton clearButton;
     private String[] parameterValues;
     protected JMSMessageDispatcher jmsMessageDispatcher;
@@ -65,7 +65,7 @@ public class JMSUtility extends Component {
         });
         clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                interactiveForm1.clear();
+                messagePropertiesInteractiveForm.clear();
             }
         });
     }
@@ -140,20 +140,19 @@ public class JMSUtility extends Component {
 
             for (String parameterValue1 : parameterValues) {
                 Formatter formatter = new Formatter();
-                String parameterValue = parameterValue1;
-                String[] values = parameterValue.split(":");
+                String[] values = parameterValue1.split(":");
                 String parsedMessagePayload;
                 if (values.length > 0) {
                     //TODO there is more than one value per line. Meaning messge has more than one placeholder
                     parsedMessagePayload = formatter.format(parameterizedMessagePayload, values).toString();
                 } else {
-                    parsedMessagePayload = formatter.format(parameterizedMessagePayload, parameterValue).toString();
+                    parsedMessagePayload = formatter.format(parameterizedMessagePayload, parameterValue1).toString();
                 }
-                jmsMessageDispatcher.sendMessage(destinationQueue, parsedMessagePayload, null);
+                jmsMessageDispatcher.sendMessage(destinationQueue, parsedMessagePayload, messagePropertiesInteractiveForm.getMessageProperties());
             }
         } else {
             logWindow.log("Sending 1 message");
-            jmsMessageDispatcher.sendMessage(destinationQueue, parameterizedMessagePayload, null);
+            jmsMessageDispatcher.sendMessage(destinationQueue, parameterizedMessagePayload, messagePropertiesInteractiveForm.getMessageProperties());
         }
     }
 

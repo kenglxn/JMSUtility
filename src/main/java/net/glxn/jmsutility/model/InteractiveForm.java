@@ -8,6 +8,9 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -67,6 +70,20 @@ import java.util.Vector;
     public void clear() {
         tableModel.dataVector = new Vector<JMSMessageProperty>();
         tableModel.addEmptyRow();
+    }
+
+    public Map<String, Object> getMessageProperties() {
+        HashMap<String, Object> messagePropertiesHashMap = new HashMap<String, Object>();
+
+        Enumeration<JMSMessageProperty> jmsMessagePropertyEnumeration = tableModel.dataVector.elements();
+        while (jmsMessagePropertyEnumeration.hasMoreElements()) {
+            JMSMessageProperty jmsMessageProperty = jmsMessagePropertyEnumeration.nextElement();
+            if (jmsMessageProperty.getName() == null || "".equals(jmsMessageProperty.getName())) {
+                continue;
+            }
+            messagePropertiesHashMap.put(jmsMessageProperty.getName(), jmsMessageProperty.getValue());
+        }
+        return messagePropertiesHashMap;
     }
 
     class InteractiveRenderer extends DefaultTableCellRenderer {
