@@ -23,6 +23,7 @@ public class JMSUtility extends Component {
     private JButton sendMessageSButton;
     private JButton helpButton;
     private InteractiveForm interactiveForm1;
+    private JButton clearButton;
     private String[] parameterValues;
     protected JMSMessageDispatcher jmsMessageDispatcher;
     private final LogWindow logWindow = LogAppenderFactory.getLogWindow();
@@ -60,6 +61,11 @@ public class JMSUtility extends Component {
                 } catch (Exception ex) {
                     showErrorPane(ex.getMessage(), ExceptionUtils.getFullStackTrace(ex));
                 }
+            }
+        });
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                interactiveForm1.clear();
             }
         });
     }

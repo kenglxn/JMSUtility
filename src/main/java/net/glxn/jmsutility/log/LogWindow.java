@@ -11,7 +11,7 @@ public class LogWindow extends JFrame implements LogAppender {
     LogWindow() {
         super("Log Window");
         setSize(500, 300);
-        setLocation(500, 0);
+        setLocation(575, 0);
         add(new JScrollPane(textArea));
         setVisible(true);
     }

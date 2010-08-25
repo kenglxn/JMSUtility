@@ -8,6 +8,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Vector;
 
 /**
  * InteractiveForm enables dynamic/interactive table input
@@ -63,7 +64,12 @@ import java.awt.event.WindowEvent;
          table.setColumnSelectionInterval(0, 0);
      }
 
-     class InteractiveRenderer extends DefaultTableCellRenderer {
+    public void clear() {
+        tableModel.dataVector = new Vector<JMSMessageProperty>();
+        tableModel.addEmptyRow();
+    }
+
+    class InteractiveRenderer extends DefaultTableCellRenderer {
          protected int interactiveColumn;
 
          public InteractiveRenderer(int interactiveColumn) {
