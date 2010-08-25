@@ -71,34 +71,41 @@ public class JMSUtility extends Component {
     }
 
     protected void sendMessageActionPerformed() {
-        validateInputFields();
-        allocateJMSMessageDispatcher();
-        assembleAndDispatchMessages();
+        if(validateInputFields()) {
+            allocateJMSMessageDispatcher();
+            assembleAndDispatchMessages();
+        }
     }
 
     protected void allocateJMSMessageDispatcher() {
         jmsMessageDispatcher = JMSMessageDispatcherFactory.getJMSMessageDispatcher(jmsServerUrl.getText());
     }
 
-    protected void validateInputFields() {
+    protected boolean validateInputFields() {
+        boolean isValid = true;
         if (!jmsServerUrl.getText().matches("\\w{2,5}://.*:\\d{2,6}")) {
+            isValid = false;
             showErrorPane("input validation error", "JMS Server URL is not a valid URL. " +
                     "\n\n should be: [protocol]://[host]:[port]" +
                     "\n example:   tcp://localhost:61616");
         }
         if (StringUtils.isBlank(queueDestinationTextField.getText())) {
+            isValid = false;
             showErrorPane("input validation error", "You must supply a Queue destination");
         }
         if (StringUtils.isBlank(messageTextPane.getText())) {
+            isValid = false;
             showErrorPane("input validation error", "Message can not be blank");
         }
         int parameters = numberOfParametersInText(messageTextPane.getText());
         parameterValues = StringUtils.split(parameterListTextPane.getText(), "\n");
         if (parameters > 0 && parameterValues.length == 0) {
+            isValid = false;
             showErrorPane("input validation error", "You have supplied a parameterized message but no parameters. " +
                     "\n\nPlease see the Help! dialog.");
         }
         if (parameters == 0 && parameterValues.length > 0) {
+            isValid = false;
             showErrorPane("input validation error", "You have supplied parameters to a message that has no placeholders." +
                     "\n\nPlease see the Help! dialog.");
         }
@@ -111,11 +118,13 @@ public class JMSUtility extends Component {
                 }
             }
             if (parameterNumberOfFieldsMismatch) {
+                isValid = false;
                 showErrorPane("input validation error", "Your parameter list contains at least one entry that does not " +
                         "satisfy the parameterized message." +
                         "\n\nPlease see the Help! dialog.");
             }
         }
+        return isValid;
     }
 
     int numberOfParametersInText(String text) {
