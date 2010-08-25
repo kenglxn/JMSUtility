@@ -40,7 +40,8 @@ import java.awt.event.WindowEvent;
          }
 
          scroller = new javax.swing.JScrollPane(table);
-         table.setPreferredScrollableViewportSize(new java.awt.Dimension(500, 300));
+         scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+         table.setPreferredScrollableViewportSize(new java.awt.Dimension(300, 100));
          TableColumn hidden = table.getColumnModel().getColumn(InteractiveTableModel.HIDDEN_INDEX);
          hidden.setMinWidth(2);
          hidden.setPreferredWidth(2);
