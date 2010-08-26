@@ -7,7 +7,7 @@ package net.glxn.jmsutility.model;
  * @author <a href="mailto:ken@glxn.net">Ken Gullaksen</a>
  * @version $Revision: $
  */
-public class JMSMessageProperty {
+class JMSMessageProperty {
     private String name;
     private String value;
 

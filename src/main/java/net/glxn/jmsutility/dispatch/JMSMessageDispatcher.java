@@ -31,14 +31,14 @@ public class JMSMessageDispatcher {
      * Constructs a new dispatcher with the given jms_server_url
      *
      * @param jms_server_url the url of the JMS server to send messages e.g. tcp://localhost:61616
-     * @param logAppender the logAppender to use when logging output
+     * @param logAppender    the logAppender to use when logging output
      */
     protected JMSMessageDispatcher(String jms_server_url, final LogAppender logAppender) {
         this.logAppender = logAppender;
         JMS_SERVER_URL = jms_server_url;
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
-                logAppender.log("tearing down JMSMessageDispatcher for URL:"+JMS_SERVER_URL);
+                logAppender.log("tearing down JMSMessageDispatcher for URL:" + JMS_SERVER_URL);
                 closeConnection();
             }
         }));
@@ -51,19 +51,21 @@ public class JMSMessageDispatcher {
      * upon the instantiation of this {@link JMSMessageDispatcher}
      * The method uses this {@link javax.jms.ConnectionFactory} to send a {@link javax.jms.TextMessage}.
      * The message is constructed with the given payload and properties, and dispatched to the given queue.
-     * @param queue the name of the {@link javax.jms.Destination} JMS Queue to send the message to. value is required
-     * @param payload the text body of the {@link javax.jms.TextMessage}. value is required
+     *
+     * @param queue             the name of the {@link javax.jms.Destination} JMS Queue to send the message to. value is required
+     * @param payload           the text body of the {@link javax.jms.TextMessage}. value is required
      * @param messageProperties map of properties to add to the message. each map entry is added to message with
-     * {@link javax.jms.TextMessage#setObjectProperty(String, Object)}. Value is optional
+     *                          {@link javax.jms.TextMessage#setObjectProperty(String, Object)}. Value is optional
      * @throws IllegalArgumentException if required argument is missing
      */
     public void sendMessage(final String queue, final String payload, final Map<String, Object> messageProperties) throws IllegalArgumentException {
-        if(queue == null) {
+        if (queue == null) {
             throw new IllegalArgumentException("queue can not be null");
         }
-        if(payload == null) {
+        if (payload == null) {
             throw new IllegalArgumentException("payload can not be null");
         }
+        logAppender.log("Sending message to " + queue);
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(username, password, JMS_SERVER_URL);
 
         Session session = null;
@@ -78,14 +80,15 @@ public class JMSMessageDispatcher {
             TextMessage message = session.createTextMessage();
             message.setText(payload);
 
-            if(messageProperties != null && !messageProperties.isEmpty()) {
+            if (messageProperties != null && !messageProperties.isEmpty()) {
                 for (Entry<String, Object> elem : messageProperties.entrySet()) {
                     message.setObjectProperty(elem.getKey(), elem.getValue());
+                    logAppender.log("Property set on message Key=" + elem.getKey() + ",Value=" + elem.getValue());
                 }
             }
 
             producer.send(message);
-
+            logAppender.log("Message sent: " +  message.toString());
             session.commit();
         } catch (JMSException e) {
             silentRollback(session);

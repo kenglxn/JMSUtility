@@ -25,8 +25,9 @@ public class JMSUtility extends Component {
     private InteractiveForm messagePropertiesInteractiveForm;
     private JButton clearButton;
     private String[] parameterValues;
-    protected JMSMessageDispatcher jmsMessageDispatcher;
+    JMSMessageDispatcher jmsMessageDispatcher;
     private final LogWindow logWindow = LogAppenderFactory.getLogWindow();
+    private final JMSMessageDispatcherFactory jmsMessageDispatcherFactory = new JMSMessageDispatcherFactory();
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -70,18 +71,18 @@ public class JMSUtility extends Component {
         });
     }
 
-    protected void sendMessageActionPerformed() {
-        if(validateInputFields()) {
+    void sendMessageActionPerformed() {
+        if (validateInputFields()) {
             allocateJMSMessageDispatcher();
             assembleAndDispatchMessages();
         }
     }
 
-    protected void allocateJMSMessageDispatcher() {
-        jmsMessageDispatcher = JMSMessageDispatcherFactory.getJMSMessageDispatcher(jmsServerUrl.getText());
+    void allocateJMSMessageDispatcher() {
+        jmsMessageDispatcher = jmsMessageDispatcherFactory.getJMSMessageDispatcher(jmsServerUrl.getText());
     }
 
-    protected boolean validateInputFields() {
+    boolean validateInputFields() {
         boolean isValid = true;
         if (!jmsServerUrl.getText().matches("\\w{2,5}://.*:\\d{2,6}")) {
             isValid = false;
@@ -143,7 +144,6 @@ public class JMSUtility extends Component {
                 String[] values = parameterValue1.split(":");
                 String parsedMessagePayload;
                 if (values.length > 0) {
-                    //TODO there is more than one value per line. Meaning messge has more than one placeholder
                     parsedMessagePayload = formatter.format(parameterizedMessagePayload, values).toString();
                 } else {
                     parsedMessagePayload = formatter.format(parameterizedMessagePayload, parameterValue1).toString();
@@ -184,7 +184,7 @@ public class JMSUtility extends Component {
         dialog.setVisible(true);
     }
 
-    protected void showErrorPane(String title, String msg) {
+    void showErrorPane(String title, String msg) {
         logWindow.log(msg);
         JOptionPane pane = new JOptionPane(msg, JOptionPane.ERROR_MESSAGE);
         JDialog dialog = pane.createDialog("Application says: " + title);
