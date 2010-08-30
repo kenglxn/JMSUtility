@@ -147,7 +147,7 @@ public class JMSUtility extends Component {
                 if (values.length > 0) {
                     parsedMessagePayload = formatter.format(parameterizedMessagePayload, values).toString();
                 } else {
-                    parsedMessagePayload = formatter.format(parameterizedMessagePayload, StringUtils.trim(parameterValue1)).toString();
+                    parsedMessagePayload = formatter.format(parameterizedMessagePayload, parameterValue1).toString();
                 }
                 jmsMessageDispatcher.sendMessage(destinationQueue, parsedMessagePayload, messagePropertiesInteractiveForm.getMessageProperties());
             }
