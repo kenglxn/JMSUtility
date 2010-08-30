@@ -43,6 +43,7 @@ public class JMSUtility extends Component {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        frame.setAlwaysOnTop(false);
     }
 
     public JMSUtility() {
