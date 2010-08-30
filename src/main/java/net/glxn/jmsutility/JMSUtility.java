@@ -24,7 +24,6 @@ public class JMSUtility extends Component {
     private JButton helpButton;
     private InteractiveForm messagePropertiesInteractiveForm;
     private JButton clearButton;
-    private String[] parameterValues;
     JMSMessageDispatcher jmsMessageDispatcher;
     private final LogWindow logWindow = LogAppenderFactory.getLogWindow();
     private final JMSMessageDispatcherFactory jmsMessageDispatcherFactory = new JMSMessageDispatcherFactory();
@@ -100,7 +99,7 @@ public class JMSUtility extends Component {
             showErrorPane("input validation error", "Message can not be blank");
         }
         int parameters = numberOfParametersInText(messageTextPane.getText());
-        parameterValues = StringUtils.split(parameterListTextPane.getText(), "\n");
+        String[] parameterValues = getPramaterValuesArraySplitOnNewLineForNixAndWindows();
         if (parameters > 0 && parameterValues.length == 0) {
             isValid = false;
             showErrorPane("input validation error", "You have supplied a parameterized message but no parameters. " +
@@ -129,6 +128,12 @@ public class JMSUtility extends Component {
         return isValid;
     }
 
+    private String[] getPramaterValuesArraySplitOnNewLineForNixAndWindows() {
+        String text = parameterListTextPane.getText();
+        text = text.replace("\r\n", "\n");
+        return StringUtils.split(text, "\n");
+    }
+
     int numberOfParametersInText(String text) {
         return StringUtils.countMatches(text, "%s");
     }
@@ -137,6 +142,7 @@ public class JMSUtility extends Component {
         String destinationQueue = queueDestinationTextField.getText();
         String parameterizedMessagePayload = messageTextPane.getText();
 
+        String[] parameterValues = getPramaterValuesArraySplitOnNewLineForNixAndWindows();
         if (parameterValues.length > 0) {
             logWindow.log("Sending messages for parameters in list. \nTotal number of messages to send=" + parameterValues.length);
 
