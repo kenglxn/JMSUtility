@@ -37,7 +37,7 @@ public class JMSUtility extends Component {
     }
 
     private static void createAndShowGUI() {
-        JFrame frame = new JFrame("JMSUtilForm");
+        JFrame frame = new JFrame("JMS Utility");
         frame.setContentPane(new JMSUtility().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -166,7 +166,7 @@ public class JMSUtility extends Component {
     private void showHelpDialog() {
         String message = "This tool let's you send a JMS messsage to a queue. " +
                 "\nSupply the input fields with correct values and click send button." +
-                "\n\nThere is a special feature for the message and parameter list input fields." +
+                "\n\nThere is a special feature for the 'message properties' and 'parameter list' input fields." +
                 "\nThese fields work together, so if you supply the message with a placeholder, namely %s, " +
                 "\nthen the tool will attempt to fill the placeholder with values from the parameter list. If you have one %s in you message, " +
                 "\nthen you can send several messages with each message being given a new value for %s with the next value in the list. " +
