@@ -36,12 +36,6 @@ public class JMSMessageDispatcher {
     protected JMSMessageDispatcher(String jms_server_url, final LogAppender logAppender) {
         this.logAppender = logAppender;
         JMS_SERVER_URL = jms_server_url;
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            public void run() {
-                logAppender.log("tearing down JMSMessageDispatcher for URL:" + JMS_SERVER_URL);
-                closeConnection();
-            }
-        }));
     }
 
 
